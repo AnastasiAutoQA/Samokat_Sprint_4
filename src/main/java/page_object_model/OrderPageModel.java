@@ -21,6 +21,7 @@ public class OrderPageModel {
     private static final By DATE_INPUT_FIELD = By.xpath("//input[@placeholder ='* Когда привезти самокат']");
     private static final By RENTAL_PERIOD_MENU = By.xpath("//span[@class = 'Dropdown-arrow']");
     //Раздел подтверждения заказа
+    private final By COMMENT_INPUT_FIELD = By.xpath(".//input[@class='Input_Input__1iN_Z Input_Responsible__1jDKN']");
     private static final By ORDER_BUTTON = By.xpath("//div[@class='Order_Buttons__1xGrp']/button[text() ='Заказать']");
     // Попап с запросом подтверждения заказа и кнопками Да/Нет
     private static final By REQUEST_FOR_CONFIRMATION = By.className("Order_Modal__YZ-d3");
@@ -29,6 +30,7 @@ public class OrderPageModel {
     private static final By CONFIRMED_ORDER_MESSAGE = By.className("Order_ModalHeader__3FDaJ");
     private static final By CONFIRMED_ORDER_FORM = By.className("Order_Modal__YZ-d3");
     private static final By CONFIRMED_ORDER_DATA = By.className("Order_Text__2broi");
+    private static final By ACCEPT_COOKIE_BUTTON = By.className("App_CookieButton__3cvqF");
 
     public OrderPageModel(WebDriver driver) {
         this.driver = driver;
@@ -41,7 +43,7 @@ public class OrderPageModel {
     // Нажимаем кнопки Принять куки
     public void agreeWithCookiesOnOrderPage() {
         new WebDriverWait(driver, Duration.ofSeconds(3)).until(ExpectedConditions.visibilityOfElementLocated(FIRST_ORDER_PAGE));
-        driver.findElement(By.className("App_CookieButton__3cvqF")).click();
+        driver.findElement(ACCEPT_COOKIE_BUTTON).click();
     }
 
     //Нажимаем кнопку "Заказать" на главной странице
@@ -59,8 +61,10 @@ public class OrderPageModel {
         driver.findElement(ADDRESS_INPUT_FIELD).clear();
         driver.findElement(ADDRESS_INPUT_FIELD).sendKeys(city);
         driver.findElement(METRO_STATION_DROPDOWN).click();
-        By metroLocator = By.xpath("//div[@class='Order_Text__2broi' and text()='" + metro + "']");
-        driver.findElement(metroLocator).click();
+        String metroLocator = String.format("//div[@class='Order_Text__2broi' and text()='%s']", metro);
+        driver.findElement(By.xpath(metroLocator)).click();
+            //By metroLocator = By.xpath("//div[@class='Order_Text__2broi' and text()='" + metro + "']");
+            //driver.findElement(metroLocator).click();
         driver.findElement(PHONE_INPUT_FIELD).clear();
         driver.findElement(PHONE_INPUT_FIELD).sendKeys(phone);
     }
@@ -79,14 +83,18 @@ public class OrderPageModel {
         driver.findElement(DATE_INPUT_FIELD).sendKeys(date);
         // Вводим срок аренды - количество дней
         driver.findElement(RENTAL_PERIOD_MENU).click();
-        By rentalPeriodValue = By.xpath(".//*[contains(text(), '" + rentalPeriod + "') and starts-with(@class, 'Dropdown')]");
-        driver.findElement(rentalPeriodValue).click();
+        String rentalPeriodValue = String.format("//div[@class = 'Dropdown-option' and text()='%s']", rentalPeriod);
+        driver.findElement(By.xpath(rentalPeriodValue)).click();
+            //By rentalPeriodValue = By.xpath(".//*[contains(text(), '" + rentalPeriod + "') and starts-with(@class, 'Dropdown')]");
+            //driver.findElement(rentalPeriodValue).click();
         // Выбираем цвет самоката
-        By colourSelected = By.xpath(".//label[contains(text(), '"+ colour +"')]");
-        driver.findElement(colourSelected).click();
+        String colourSelected = String.format(".//label[@class= 'Checkbox_Label__3wxSf' and text()='%s']", colour);
+        driver.findElement(By.xpath(colourSelected)).click();
+            //By colourSelected = By.xpath(".//label[contains(text(), '"+ colour +"')]");
+            //driver.findElement(colourSelected).click();
         // Вводится коммент
-        By commentValue = By.xpath(".//input[@class='Input_Input__1iN_Z Input_Responsible__1jDKN']");
-        driver.findElement(commentValue).sendKeys(comment);
+        driver.findElement(COMMENT_INPUT_FIELD).clear();
+        driver.findElement(COMMENT_INPUT_FIELD).sendKeys(comment);
         // Нажимаем кнопку Заказать - подтверждаем заказ
         driver.findElement(ORDER_BUTTON).click();
     }

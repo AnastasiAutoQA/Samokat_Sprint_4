@@ -1,19 +1,11 @@
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxOptions;
 import page_object_model.OrderPageModel;
 
 @RunWith(Parameterized.class)
-public class OrderPageTest {
-    private WebDriver driver;
+public class OrderPageTest extends BaseTest {
     //поля формы заказа
     private final String name;
     private final String lastname;
@@ -37,6 +29,7 @@ public class OrderPageTest {
         this.colour = colour;
         this.comment = comment;
     }
+
     // Тестовые данные для заполнения формы заказа
     @Parameterized.Parameters
     public static Object[][] getOrderData() {
@@ -46,20 +39,6 @@ public class OrderPageTest {
         };
     }
 
-    @Before
-    public void startBrowser() {
-        // Стартуем браузер Chrome (в нем будет баг):
-        ChromeOptions chromeOptions = new ChromeOptions();
-        chromeOptions.addArguments("--remote-allow-origins=*");
-        driver = new ChromeDriver(chromeOptions);
-
-        // Стартуем браузер FireFox (в нем проходит до конца тестового сценария):
-        // System.setProperty("webdriver.gecko.driver", "C:\\WebDriverMozilla\\bin\\geckodriver.exe");
-        // FirefoxOptions options = new FirefoxOptions();
-        // options.setBinary("C:\\Program Files\\Mozilla Firefox\\firefox.exe");
-        // driver = new FirefoxDriver(options);
-
-    }
     @Test
     public void shouldCreateOrderChrome() {
         OrderPageModel objOrderPage = new OrderPageModel(driver);
@@ -78,10 +57,6 @@ public class OrderPageTest {
         Assert.assertTrue("Данные заказа отсутсвуют", objOrderPage.confirmOrderData().isDisplayed());
         // Если ожидаемый текст "Заказ оформлен" не совпадет с текстом в попапе о подтверждении заказа - то будет ошибка "Неверный статус"
         // тут использовала substring, чтобы цеплять только первые 14 символов из текста, иначе тест падает-так как к тексту Заказ оформлен прилепливаются еще данные о заказе
-        Assert.assertEquals("Неверный статус", "Заказ оформлен", objOrderPage.getConfirmationMessage().substring(0,14));
-    }
-    @After
-    public void tearDown() {
-        driver.quit();
+        Assert.assertEquals("Неверный статус", "Заказ оформлен", objOrderPage.getConfirmationMessage().substring(0, 14));
     }
 }

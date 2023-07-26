@@ -23,6 +23,8 @@ public class MainPageModel {
     private static final By FAQ_VISIBLE_ANSWER = By.xpath("//div[@class='accordion__panel' and not(@hidden)]");
     //Заголовок секции "Вопросы о важном"
     private static final By FAQ_SECTION = By.className("Home_SubHeader__zwi_E");
+    // Кнопка Принять куки
+    private static final By ACCEPT_COOKIE_BUTTON = By.className("App_CookieButton__3cvqF");
 
     public MainPageModel(WebDriver driver) {
         this.driver = driver;
@@ -36,7 +38,7 @@ public class MainPageModel {
     //Нажимает на кнопку Принять куки и закрывает секцию с куки
     public void acceptCookiesOnMainPage() {
         new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.visibilityOfElementLocated(HOME_PAGE));
-        driver.findElement(By.className("App_CookieButton__3cvqF")).click();
+        driver.findElement(ACCEPT_COOKIE_BUTTON).click();
     }
 
     //Скроллит до раздела "Вопросы о важном"

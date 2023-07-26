@@ -1,24 +1,16 @@
 //Тестовый сценарий: Выпадающий список в разделе «Вопросы о важном».
 // Нужно проверить: когда нажимаешь на стрелочку, открывается соответствующий текст.
-
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxOptions;
 import page_object_model.MainPageModel;
 
 import java.util.concurrent.TimeUnit;
 
 @RunWith(Parameterized.class)
-public class FaqSectionTest {
-    private WebDriver driver;
+public class FaqSectionTest extends BaseTest {
+    // private WebDriver driver;
     //Номер вопроса
     private final int number;
     //Вопрос
@@ -45,23 +37,6 @@ public class FaqSectionTest {
                 {7, "Я жизу за МКАДом, привезёте?", "Да, обязательно. Всем самокатов! И Москве, и Московской области."},
         };
     }
-    @Before
-    public void startBrowser() {
-        //Стартуем браузер Chrome (в нем будет баг):
-        ChromeOptions chromeOptions = new ChromeOptions();
-        chromeOptions.addArguments("--remote-allow-origins=*");
-        driver = new ChromeDriver(chromeOptions);
-
-        // Стартуем браузер FireFox (в нем проходит до конца тестового сценария):
-        //System.setProperty("webdriver.gecko.driver", "C:\\WebDriverMozilla\\bin\\geckodriver.exe");
-        //FirefoxOptions options = new FirefoxOptions();
-        //options.setBinary("C:\\Program Files\\Mozilla Firefox\\firefox.exe");
-        //driver = new FirefoxDriver(options);
-        //driver.manage().window().maximize();
-        //driver.manage().deleteAllCookies();
-        //driver.manage().timeouts().pageLoadTimeout(40, TimeUnit.SECONDS);
-        //driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-    }
     //Проверяем открытие секции ответа по клику на вопрос.
     // Проверяем соответствие вопроса и ответа ожидаемому набору данных.
     @Test
@@ -76,10 +51,5 @@ public class FaqSectionTest {
         Assert.assertEquals(1, objMainPage.sizeOfFaqSectionVisible()); // Должен открыться один ответ
         Assert.assertEquals("Показан неверный вопрос", checkedQuestionText, questionText);
         Assert.assertEquals("Показан неверный ответ", checkedAnswerText, answerText);
-    }
-
-    @After
-    public void tearDown() {
-        driver.quit();
     }
 }
